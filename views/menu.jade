@@ -1,0 +1,22 @@
+.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
+    .container
+        .navbar-header
+          button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href='#') Project name
+        .navbar-collapse.collapse
+            form.navbar-form.navbar-right(role='form', action="/login", method="post")
+                if (!user)
+                    .form-group
+                        input.form-control(type='text', placeholder='Username', name='username')
+                    .form-group
+                        input.form-control(type='password', placeholder='Password', name='password')
+                    button.btn.btn-success(type='submit') Sign in
+                    a.btn.btn-info(href='/register', role='button') Register
+                if (user)
+                    a.btn.btn-warning(href='/logout', role='button') Logout (#{user.username})
+        //
+    
