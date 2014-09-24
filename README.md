@@ -1,7 +1,10 @@
-# User Authentication With Passport.js
 
-- In this post I’ll demonstrate how to add user authentication to Node.js with Passport.js. 
-- View the blog post here: http://mherman.org/blog/2013/11/11/user-authentication-with-passport-dot-js/
+`npm install`
 
+Install passport-local-mongoose from github because we need features not yet
+part of the official release
 
+`npm install https://github.com/saintedlama/passport-local-mongoose.git`
 
+NB: Need to re-add `    "passport-local-mongoose": "~0.2.5",` to package.json 
+whenever the above is addressed.

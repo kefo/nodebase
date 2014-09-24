@@ -22,14 +22,14 @@
   "license": "MIT",
   "dependencies": {
     "express": "~3.3.4",
-    "jade": "~0.34.1",
-    "passport": "~0.1.17",
-    "passport-local": "~0.1.6",
+    "connect-flash": "~0.1.1",
+    "jade": "~1.7.0",
+    "passport": "~0.2.0",
+    "passport-local": "~1.0.0",
     "mongoose": "~3.8.0",
-    "passport-local-mongoose": "~0.2.5",
-    "mocha": "~1.14.0",
-    "chai": "~1.8.1",
-    "should": "~2.1.0",
+    "mocha": "~1.21.4",
+    "chai": "~1.9.1",
+    "should": "~4.0.4",
     "bcrypt-nodejs": "0.0.3"
   }
 }

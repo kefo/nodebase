@@ -5,9 +5,12 @@ var mongoose = require('mongoose'),
 
 var Account = new Schema({
     username: String,
-    password: String
+    password: String,
+    attempts: Number,
+    last:  Date,
+    roles: [String]
 });
 
-Account.plugin(passportLocalMongoose);
+Account.plugin(passportLocalMongoose, {"limitAttempts": 1, "usernameLowerCase": 1});
 
 module.exports = mongoose.model('Account', Account);

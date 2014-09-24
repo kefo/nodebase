@@ -1,4 +1,4 @@
-.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
+.navbar.navbar.navbar-fixed-top(role='navigation')
     .container
         .navbar-header
           button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='.navbar-collapse')
@@ -7,16 +7,29 @@
             span.icon-bar
             span.icon-bar
           a.navbar-brand(href='#') Project name
-        .navbar-collapse.collapse
-            form.navbar-form.navbar-right(role='form', action="/login", method="post")
-                if (!user)
+        .collapse.navbar-collapse.navbar-right
+            ul.nav.navbar-nav
+                if (user)
+                    li
+                        a(href='/page1') Page 1
+                    each role in user.roles
+                        if (role=='admin')
+                            li
+                                a(href='/admin-page1') Admin Page 1
+                    li
+                        a(href='/logout', role='button') Logout (#{user.username})
+            if (!user)
+                form.navbar-form.navbar-right(role='form', action="/login", method="post")
+                    if (message)
+                        button.btn.btn-danger(type='button') (#{message})
+                    if (error==1002)
+                        button.btn.btn-danger(type='button') Not signed in.
                     .form-group
                         input.form-control(type='text', placeholder='Username', name='username')
                     .form-group
                         input.form-control(type='password', placeholder='Password', name='password')
                     button.btn.btn-success(type='submit') Sign in
-                    a.btn.btn-info(href='/register', role='button') Register
-                if (user)
-                    a.btn.btn-warning(href='/logout', role='button') Logout (#{user.username})
+                    //
+                        a.btn.btn-info(href='/register', role='button') Register
         //
     
