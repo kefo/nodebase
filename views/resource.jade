@@ -1,0 +1,21 @@
+extends ./layout.jade
+
+block content
+    //
+       Main jumbotron for a primary marketing message or call to action 
+    .container
+        h1 #{subject}
+        table.table.table-striped
+            thead
+                tr
+                    th Predicate
+                    th Object
+            tbody
+                each t in triples
+                    tr
+                        td #{t.p.value}
+                        td 
+                            if (t.o.token=='uri')
+                                a(href='#{t.o.href}') #{t.o.value}
+                            else
+                                p #{t.o.value}

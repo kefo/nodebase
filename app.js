@@ -5,6 +5,7 @@ var http = require('http');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var MongoStore = require('connect-mongo')(express);
 
 // main config
 var app = express();
@@ -16,7 +17,14 @@ app.use(express.logger());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
-app.use(express.session({cookie: { maxAge: 60000 }}));
+//app.use(express.session({cookie: { maxAge: 604800 }})); // one week
+app.use(express.session({
+  store: new MongoStore({
+    url: 'mongodb://localhost/nodebase'
+  }),
+    secret: "Mary had little lamb, little lamb",
+    cookie: { maxAge: 24 * 60 * 60 * 1000 },
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(app.router);
@@ -30,6 +38,8 @@ app.configure('production', function(){
     app.use(express.errorHandler());
 });
 
+var Search = require('./models/search');
+
 // passport config
 var Account = require('./models/account');
 passport.use(new LocalStrategy(Account.authenticate()));
@@ -39,6 +49,10 @@ passport.deserializeUser(Account.deserializeUser());
 // mongoose
 mongoose.connect('mongodb://localhost/nodebase');
 
+app.use(function(req, res, next){
+    req.session.touch();
+    next();
+});
 // routes
 require('./routes')(app);
 
