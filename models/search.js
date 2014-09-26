@@ -4,8 +4,22 @@ var mongoose = require('mongoose'),
 var SearchSchema = new Schema({
     subject: String,
     predicate: String,
-    object: { type: String, index: true },
+    object: String,
     graph:  String
 });
 
-module.exports = mongoose.model('quad', SearchSchema);
+SearchSchema.set('autoIndex', true);
+mongoose.set('debug', true);
+
+SearchSchema.index( { object : 'text' });
+
+/*
+var schemamodel = mongoose.model('quad', SearchSchema); 
+schemamodel.collection.ensureIndex({object: 'text'}, function(error) {
+    if (error) {
+        console.log("Error ensuring index.");
+    }
+});
+*/
+
+module.exports = mongoose.model('quads', SearchSchema);

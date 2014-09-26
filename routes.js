@@ -106,32 +106,29 @@ module.exports = function (app) {
     
     app.get("/search/", function(req, res) {
         var query = req.query.q;
-        /*
         Search
             .find(
-                { $text : { $search : "Nesmrtelnost" } }, 
+                { $text : { $search : 'vanity' } }, 
                 { score : { $meta: "textScore" } }
             )
             .sort({ score : { $meta : 'textScore' } })
             .exec(function(err, results) {
                 // callback
                 if (err) {
-                    console.log(err);
+                    console.log("error encountered");
                 }
                 console.log(results);
             });
-        */
-        Search
-            .find(
-                { "text" : { "search" : "Nesmrtelnost" } }
-            )
-            .exec(function(err, results) {
+        
+        Search.find({subject: 'u:http://example.org/12062545title108'}, function(err, results) {
                 // callback
                 if (err) {
-                    console.log(err);
+                    console.log("error encountered");
                 }
                 console.log(results);
             });
+        
+        res.send("pong!", 200);
     })
 
 };
