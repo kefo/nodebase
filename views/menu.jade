@@ -9,6 +9,10 @@
           a.navbar-brand(href='#') Project name
         .collapse.navbar-collapse.navbar-right
             ul.nav.navbar-nav
+                form.navbar-form.navbar-left(role="form", action="/search/", method="GET")
+                    .form-group
+                        input.form-control(type="search", id="q", name="q", placeholder="Enter search term...")
+                    button.btn.btn-primary(type="submit") Submit
                 if (user)
                     li
                         a(href='/page1') Page 1

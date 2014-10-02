@@ -1,0 +1,34 @@
+extends ./layout.jade
+
+block content
+    //
+       Main jumbotron for a primary marketing message or call to action 
+    .container
+        div
+            br
+        if msg != ""
+            h2 #{msg}
+        each r in resources
+            h2 
+                a(href='#{r.link}') #{r.label}
+            table.table.table-striped
+                tbody
+                    each po in r.po
+                        if po.p.value == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                            +tr(po)
+                        if po.p.value == "http://www.w3.org/2000/01/rdf-schema#label"
+                            +tr(po)
+                        if po.p.value == "http://bibframe.org/vocab/label"
+                            +tr(po)
+                        if po.p.value == "http://bibframe.org/vocab/title"
+                            +tr(po)
+
+
+mixin tr(po)
+    tr
+        td #{po.p.value}
+        td 
+            if (po.o.token=='uri')
+                a(href='#{po.o.href}') #{po.o.value}
+            else
+                p #{po.o.value}

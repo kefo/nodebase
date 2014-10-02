@@ -1,6 +1,6 @@
 var passport = require('passport');
 var Account = require('./models/account');
-var Search = require('./models/search');
+var Resource = require('./models/resource');
 var rdfstore = require('rdfstore');
 
 module.exports = function (app) {
@@ -66,69 +66,44 @@ module.exports = function (app) {
     
     app.get(/^\/resources\/([\w]+)$/, function (req, res, next) {
         console.log("Match");
-        new rdfstore.Store(
-            {   
-                persistent:true, 
-                engine:'mongodb', 
-                name:'nodebase', // quads in MongoDB will be stored in a DB named myappstore
-                overwrite:false,    // delete all the data already present in the MongoDB server
-                mongoDomain:'localhost', // location of the MongoDB instance, localhost by default
-                mongoPort:27017 // port where the MongoDB server is running, 27017 by default
-            }, function(store) {
-                    var rdfabout = "http://example.org/" + req.params[0];
-                    /*
-                    var query = "SELECT * WHERE { \
-                                    <" + rdfabout + "> ?p ?o .\
-                                    OPTIONAL { ?o ?p2 ?o2 } \
-                                }";
-                    */
-                    var query = "SELECT * WHERE { <" + rdfabout +"> ?p ?o }";
-                    console.log(query);
-                    store.execute(query, function(success, results){
-                        if(success) {
-                            //console.log(results);
-                            for (t in results) {
-                                console.log(results[t]);
-                                if (results[t].o.token == "uri") {
-                                    if (results[t].o.value.indexOf("http://example.org") > -1) {
-                                        results[t].o.href = results[t].o.value.replace("http://example.org", "http://localhost:8000/resources");
-                                    } else {
-                                        results[t].o.href = results[t].o.value;
-                                    }
-                                }
-                            }
-                            res.render('resource', { subject: rdfabout, triples: results });
-                        }
-                    });
-                }
-        );
+        var rdfabout = "http://example.org/" + req.params[0];
+        var uris = [{ _id: 'u:' + rdfabout }];
+        Resource.describe(uris, function(err, resources) {
+            res.render('resource', { subject: rdfabout, triples: resources });
+        });
     });
     
     app.get("/search/", function(req, res) {
         var query = req.query.q;
-        Search
-            .find(
-                { $text : { $search : 'vanity' } }, 
-                { score : { $meta: "textScore" } }
-            )
-            .sort({ score : { $meta : 'textScore' } })
+        console.log(query);
+        if (query === undefined || query === "") {
+            res.render('search', { msg: "Enter search term above.", resources: [] });
+        } else {
+            Resource.aggregate( [ 
+                { $match: { $text: { $search: query } } }, 
+                { $match: { subject: { $regex: 'u:.*'} } },
+                { $sort: { score : { $meta : 'textScore' } } },
+                { $group: { _id: "$subject" } } ,
+                { $skip: 0 },
+                { $limit: 10 }
+            ])
             .exec(function(err, results) {
                 // callback
                 if (err) {
-                    console.log("error encountered");
+                    console.log("error encountered with search results");
+                    console.log(err)
                 }
-                console.log(results);
-            });
-        
-        Search.find({subject: 'u:http://example.org/12062545title108'}, function(err, results) {
-                // callback
-                if (err) {
-                    console.log("error encountered");
+                //console.log(results);
+                if (results.length > 0) {
+                    Resource.describe(results, function(err, resources) {
+                        res.render('search', { resources: resources });
+                    });
+                } else {
+                    console.log("No results found.")
+                    res.render('search', { msg: "No results found.  Please try again.", resources: [] });
                 }
-                console.log(results);
             });
-        
-        res.send("pong!", 200);
+        }
     })
 
 };

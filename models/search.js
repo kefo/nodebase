@@ -11,7 +11,7 @@ var SearchSchema = new Schema({
 SearchSchema.set('autoIndex', true);
 mongoose.set('debug', true);
 
-SearchSchema.index( { object : 'text' });
+//SearchSchema.index( { object : 'text', subject: 'text' });
 
 /*
 var schemamodel = mongoose.model('quad', SearchSchema); 

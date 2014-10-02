@@ -38,7 +38,29 @@ app.configure('production', function(){
     app.use(express.errorHandler());
 });
 
-var Search = require('./models/search');
+//var Search = require('./models/search');
+
+/*
+var triple_data = {
+    subject: "http://example.org/1",
+    predicate: "http://example.org/vocab/type",
+    object: "My kingdom for my vanity!",
+    graph:  "http://example.org/graph"
+}
+
+var triple = new Search(triple_data);
+
+triple.save( function(error, data){
+    if(error){
+        console.log("Error saving");
+        console.log(error);
+    }
+    else{
+        console.log("Triuple saved");
+        console.log(data);
+    }
+});
+*/
 
 // passport config
 var Account = require('./models/account');
